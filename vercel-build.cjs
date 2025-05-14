@@ -10,21 +10,17 @@ try {
     // Ler o conteúdo do arquivo
     let content = fs.readFileSync(indexPath, 'utf8');
     
-    // Verificar qual padrão está presente e substituir
-    if (content.includes('src="/src/main.tsx"')) {
-      content = content.replace('src="/src/main.tsx"', 'src="./src/main.tsx"');
-      console.log('Substituiu /src/main.tsx por ./src/main.tsx');
-    } else if (content.includes('src="src/main.tsx"')) {
-      content = content.replace('src="src/main.tsx"', 'src="./src/main.tsx"');
-      console.log('Substituiu src/main.tsx por ./src/main.tsx');
+    // Verificar se o conteúdo está correto
+    if (!content.includes('src="/src/main.tsx"')) {
+      // Atualizar para usar caminho absoluto
+      content = content.replace(/src="\.?\/src\/main\.tsx"/, 'src="/src/main.tsx"');
+      
+      // Escrever o conteúdo modificado de volta no arquivo
+      fs.writeFileSync(indexPath, content, 'utf8');
+      console.log('Arquivo index.html atualizado para usar caminho absoluto');
     } else {
-      console.log('Não encontrou o padrão para substituir em index.html');
-      console.log('Conteúdo atual:', content);
+      console.log('index.html já está usando o caminho correto: /src/main.tsx');
     }
-    
-    // Escrever o conteúdo modificado de volta no arquivo
-    fs.writeFileSync(indexPath, content, 'utf8');
-    console.log('Arquivo index.html atualizado com sucesso');
     
     // Exibir o conteúdo final
     console.log('Conteúdo final do index.html:');

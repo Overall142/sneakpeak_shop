@@ -5,7 +5,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: "",
+  base: "./",
   server: {
     host: "::",
     port: 8080,
@@ -17,8 +17,7 @@ export default defineConfig(({ mode }) => ({
     {
       name: 'html-transform',
       transformIndexHtml(html) {
-        // Transforma src="/src/main.tsx" em src="./src/main.tsx" no HTML
-        return html.replace('src="/src/main.tsx"', 'src="./src/main.tsx"');
+        return html.replace('src="./src/main.tsx"', 'src="/src/main.tsx"');
       }
     }
   ].filter(Boolean),
