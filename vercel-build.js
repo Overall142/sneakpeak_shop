@@ -1,25 +1,37 @@
 const fs = require('fs');
 const path = require('path');
 
-// Função para modificar o arquivo index.html antes do build
-function modifyIndexHtml() {
-  const indexPath = path.resolve(__dirname, 'index.html');
-  
+// Caminho para o arquivo index.html
+const indexPath = path.join(__dirname, 'index.html');
+
+try {
+  // Verificar se o arquivo existe
   if (fs.existsSync(indexPath)) {
-    // Ler o conteúdo atual do arquivo
+    // Ler o conteúdo do arquivo
     let content = fs.readFileSync(indexPath, 'utf8');
     
-    // Substituir qualquer referência de "/src/main.tsx" por "./src/main.tsx"
-    content = content.replace(/src="\/src\/main\.tsx"/g, 'src="./src/main.tsx"');
+    // Verificar qual padrão está presente e substituir
+    if (content.includes('src="/src/main.tsx"')) {
+      content = content.replace('src="/src/main.tsx"', 'src="./src/main.tsx"');
+      console.log('Substituiu /src/main.tsx por ./src/main.tsx');
+    } else if (content.includes('src="src/main.tsx"')) {
+      content = content.replace('src="src/main.tsx"', 'src="./src/main.tsx"');
+      console.log('Substituiu src/main.tsx por ./src/main.tsx');
+    } else {
+      console.log('Não encontrou o padrão para substituir em index.html');
+      console.log('Conteúdo atual:', content);
+    }
     
-    // Escrever o conteúdo de volta no arquivo
+    // Escrever o conteúdo modificado de volta no arquivo
     fs.writeFileSync(indexPath, content, 'utf8');
+    console.log('Arquivo index.html atualizado com sucesso');
     
-    console.log('index.html modificado com sucesso.');
+    // Exibir o conteúdo final
+    console.log('Conteúdo final do index.html:');
+    console.log(content);
   } else {
-    console.error('index.html não encontrado!');
+    console.error('Arquivo index.html não encontrado em:', indexPath);
   }
-}
-
-// Executar a modificação
-modifyIndexHtml(); 
+} catch (error) {
+  console.error('Erro ao processar o arquivo index.html:', error);
+} 
